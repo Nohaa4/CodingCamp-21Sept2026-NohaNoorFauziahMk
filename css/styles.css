@@ -1,0 +1,592 @@
+/*
+ * styles.css — Expense & Budget Visualizer
+ *
+ * Mobile-first responsive stylesheet.
+ * All colours use CSS custom properties so dark mode is free:
+ * just flip data-theme="dark" on <html> and everything adapts.
+ *
+ * Breakpoints:
+ *   Default          — single column, full width (320 px+)
+ *   @media 600px+   — balance and chart may sit side-by-side
+ *   @media 900px+   — form and list side-by-side
+ */
+
+/* =========================================================================
+   CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+   ========================================================================= */
+
+:root {
+  /* Light theme — default */
+  --bg-primary:    #ffffff;
+  --bg-secondary:  #f5f5f5;
+  --text-primary:  #1a1a1a;
+  --text-secondary:#666666;
+  --border-color:  #dddddd;
+  --accent-color:  #4a90e2;
+  --danger-color:  #e53e3e;
+
+  /* Category badge colours */
+  --color-food:      #e05c73;
+  --color-transport: #2b89c8;
+  --color-fun:       #b8960c;
+
+  /* Spacing scale */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+
+  --radius:    6px;
+  --shadow:    0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+  --bg-primary:    #1a1a1a;
+  --bg-secondary:  #2d2d2d;
+  --text-primary:  #f5f5f5;
+  --text-secondary:#aaaaaa;
+  --border-color:  #444444;
+  --accent-color:  #6ab0f5;
+  --danger-color:  #fc8181;
+
+  /* Slightly lighter badge colours for dark backgrounds */
+  --color-food:      #ff8fa3;
+  --color-transport: #74c0f5;
+  --color-fun:       #ffe066;
+
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+
+/* =========================================================================
+   RESET / BASE
+   ========================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin:     0;
+  padding:    0;
+}
+
+html {
+  font-size: 16px; /* base for rem calculations */
+}
+
+body {
+  font-family:      system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size:        1rem;        /* 16px — well above the 14px minimum */
+  line-height:      1.6;
+  color:            var(--text-primary);
+  background-color: var(--bg-primary);
+  min-width:        320px;       /* never scroll horizontally below this */
+  padding-bottom:   var(--space-xl);
+}
+
+
+/* =========================================================================
+   LAYOUT — WRAPPER
+   ========================================================================= */
+
+/* A centred, max-width container used by every section */
+header,
+#balance-section,
+#form-section,
+#chart-section,
+#list-section,
+#summary-section {
+  max-width: 960px;
+  margin:    0 auto;
+  padding:   var(--space-md);
+}
+
+
+/* =========================================================================
+   HEADER
+   ========================================================================= */
+
+header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  flex-wrap:       wrap;          /* wraps on narrow screens */
+  gap:             var(--space-sm);
+  padding-top:     var(--space-lg);
+  padding-bottom:  var(--space-lg);
+  border-bottom:   2px solid var(--border-color);
+}
+
+header h1 {
+  font-size:   1.5rem;
+  font-weight: 700;
+  color:       var(--text-primary);
+}
+
+/* Theme toggle button */
+#theme-toggle {
+  display:      inline-flex;
+  align-items:  center;
+  gap:          var(--space-xs);
+  min-height:   44px;             /* WCAG 2.5.5 touch target */
+  min-width:    44px;
+  padding:      0.5rem 1rem;
+  border:       2px solid var(--accent-color);
+  border-radius:var(--radius);
+  background:   transparent;
+  color:        var(--accent-color);
+  font-size:    0.9rem;
+  font-weight:  600;
+  cursor:       pointer;
+  transition:   background 0.2s, color 0.2s;
+}
+
+#theme-toggle:hover,
+#theme-toggle:focus-visible {
+  background: var(--accent-color);
+  color:      var(--bg-primary);
+  outline:    none;
+}
+
+
+/* =========================================================================
+   BALANCE SECTION
+   ========================================================================= */
+
+#balance-section {
+  margin-top:       var(--space-lg);
+  padding:          var(--space-lg);
+  background:       var(--bg-secondary);
+  border:           1px solid var(--border-color);
+  border-radius:    var(--radius);
+  box-shadow:       var(--shadow);
+  text-align:       center;
+}
+
+#balance-section h2 {
+  font-size:   1rem;
+  font-weight: 600;
+  color:       var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-sm);
+}
+
+#balance-display {
+  font-size:   2rem;
+  font-weight: 700;
+  color:       var(--accent-color);
+}
+
+
+/* =========================================================================
+   SECTION HEADINGS (shared)
+   ========================================================================= */
+
+#form-section h2,
+#chart-section h2,
+#list-section h2,
+#summary-section h2 {
+  font-size:     1.15rem;
+  font-weight:   600;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom:  2px solid var(--border-color);
+  color:          var(--text-primary);
+}
+
+#form-section,
+#chart-section,
+#list-section,
+#summary-section {
+  margin-top: var(--space-lg);
+}
+
+
+/* =========================================================================
+   INPUT FORM
+   ========================================================================= */
+
+.form-group {
+  display:       flex;
+  flex-direction: column;
+  gap:           var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+.form-group label {
+  font-size:   0.9rem;
+  font-weight: 600;
+  color:       var(--text-secondary);
+}
+
+/* All text inputs and selects — full width, consistent appearance */
+input[type="text"],
+input[type="number"],
+select {
+  width:         100%;
+  padding:       0.55rem 0.75rem;
+  border:        1px solid var(--border-color);
+  border-radius: var(--radius);
+  background:    var(--bg-primary);
+  color:         var(--text-primary);
+  font-size:     1rem;
+  transition:    border-color 0.2s, box-shadow 0.2s;
+  /* Prevents layout overflow on narrow screens */
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  outline:      none;
+  border-color: var(--accent-color);
+  box-shadow:   0 0 0 3px rgba(74, 144, 226, 0.3); /* accent-color at 30% opacity */
+}
+
+/* Inline error messages */
+.error-msg {
+  display:   block;
+  min-height: 1.2em; /* reserve space so the layout doesn't jump */
+  font-size:  0.85rem;
+  color:      var(--danger-color);
+  font-weight: 500;
+}
+
+/* Primary submit button */
+.btn-primary {
+  display:      inline-block;
+  width:        100%;
+  padding:      0.7rem 1.25rem;
+  background:   var(--accent-color);
+  color:        #ffffff;
+  border:       none;
+  border-radius:var(--radius);
+  font-size:    1rem;
+  font-weight:  600;
+  cursor:       pointer;
+  transition:   background 0.2s, transform 0.1s;
+  margin-bottom: var(--space-xs);
+}
+
+.btn-primary:hover {
+  background: #3a7abf; /* slightly darker than accent-color #4a90e2 */
+  background: var(--accent-color);
+  opacity: 0.88;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:focus-visible {
+  outline:    2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+/* Storage error shown below the submit button */
+#storage-error {
+  display:     block;
+  margin-top:  var(--space-xs);
+}
+
+
+/* =========================================================================
+   CHART SECTION
+   ========================================================================= */
+
+#chart-container {
+  position: relative;
+  width:    100%;
+  max-width: 400px;    /* cap the pie chart at a reasonable size */
+  margin:   0 auto;
+}
+
+/* Canvas must never overflow its container on small screens */
+#expense-chart {
+  max-width:  100%;
+  height:     auto !important; /* override Chart.js inline height */
+}
+
+.placeholder-msg {
+  color:       var(--text-secondary);
+  font-style:  italic;
+  text-align:  center;
+  padding:     var(--space-lg);
+}
+
+
+/* =========================================================================
+   TRANSACTION LIST SECTION
+   ========================================================================= */
+
+/* Header row: title + sort control side-by-side */
+.list-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  flex-wrap:       wrap;
+  gap:             var(--space-sm);
+  margin-bottom:   var(--space-md);
+  padding-bottom:  var(--space-xs);
+  border-bottom:   2px solid var(--border-color);
+}
+
+.list-header h2 {
+  border:  none;       /* override section heading border — already in flex row */
+  margin:  0;
+  padding: 0;
+}
+
+/* Sort select — compact, does not need full width here */
+#sort-control {
+  width:      auto;
+  min-width:  140px;
+  padding:    0.4rem 0.6rem;
+  font-size:  0.9rem;
+}
+
+/* Scrollable list container */
+#transaction-list {
+  list-style:   none;
+  max-height:   400px;
+  overflow-y:   auto;
+  border:       1px solid var(--border-color);
+  border-radius: var(--radius);
+  background:   var(--bg-primary);
+}
+
+/* Each transaction row */
+.transaction-row {
+  display:         flex;
+  align-items:     center;
+  gap:             var(--space-sm);
+  padding:         0.65rem var(--space-md);
+  border-bottom:   1px solid var(--border-color);
+  background:      var(--bg-primary);
+  transition:      background 0.15s;
+}
+
+.transaction-row:last-child {
+  border-bottom: none;
+}
+
+.transaction-row:hover {
+  background: var(--bg-secondary);
+}
+
+/* Transaction name — expands to fill available space */
+.tx-name {
+  flex:      1;
+  font-size: 0.95rem;
+  color:     var(--text-primary);
+  word-break: break-word;
+}
+
+/* Monetary amount */
+.tx-amount {
+  font-size:   0.95rem;
+  font-weight: 600;
+  color:       var(--text-primary);
+  white-space: nowrap;
+}
+
+/* Category badge */
+.category-badge {
+  display:       inline-block;
+  padding:       2px 8px;
+  border-radius: 999px;
+  font-size:     0.75rem;
+  font-weight:   700;
+  white-space:   nowrap;
+  color:         #ffffff;
+}
+
+.category-food {
+  background: var(--color-food);
+}
+
+.category-transport {
+  background: var(--color-transport);
+}
+
+.category-fun {
+  background: var(--color-fun);
+  color:      #1a1a1a; /* yellow badge — dark text for contrast */
+}
+
+[data-theme="dark"] .category-fun {
+  color: #1a1a1a;
+}
+
+/* Delete button */
+.btn-delete {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            var(--space-xs);
+  min-height:     44px;           /* WCAG 2.5.5 */
+  min-width:      44px;
+  padding:        0.3rem 0.65rem;
+  border:         1px solid var(--danger-color);
+  border-radius:  var(--radius);
+  background:     transparent;
+  color:          var(--danger-color);
+  font-size:      0.8rem;
+  cursor:         pointer;
+  transition:     background 0.15s, color 0.15s;
+  white-space:    nowrap;
+  flex-shrink:    0;
+}
+
+.btn-delete:hover,
+.btn-delete:focus-visible {
+  background: var(--danger-color);
+  color:      #ffffff;
+  outline:    none;
+}
+
+/* Empty and error states inside the list */
+.empty-state,
+.error-state {
+  padding:    var(--space-lg);
+  text-align: center;
+  color:      var(--text-secondary);
+  font-style: italic;
+  font-size:  0.95rem;
+  list-style: none;
+}
+
+.error-state {
+  color: var(--danger-color);
+}
+
+
+/* =========================================================================
+   MONTHLY SUMMARY SECTION
+   ========================================================================= */
+
+#monthly-summary {
+  border:        1px solid var(--border-color);
+  border-radius: var(--radius);
+  background:    var(--bg-secondary);
+  overflow:      hidden;
+}
+
+.summary-row {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         0.65rem var(--space-md);
+  border-bottom:   1px solid var(--border-color);
+  background:      var(--bg-secondary);
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-month {
+  font-size:   0.95rem;
+  color:       var(--text-primary);
+  font-weight: 500;
+}
+
+.summary-total {
+  font-size:   0.95rem;
+  font-weight: 700;
+  color:       var(--accent-color);
+}
+
+#monthly-summary .empty-state {
+  display:    block;
+  list-style: none;
+}
+
+
+/* =========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================= */
+
+/* ---- 600px: balance + chart may sit side-by-side ---- */
+@media (min-width: 600px) {
+  #balance-display {
+    font-size: 2.5rem;
+  }
+
+  #chart-container {
+    max-width: 480px;
+  }
+
+  /* On wider screens widen the submit button back to auto */
+  .btn-primary {
+    width: auto;
+    min-width: 200px;
+  }
+}
+
+/* ---- 900px: form + list side-by-side ---- */
+@media (min-width: 900px) {
+  /* Two-column grid for the main content area below the balance */
+  #form-section,
+  #list-section {
+    max-width: 960px;
+  }
+
+  /* Place form and list in a two-column row */
+  body > #form-section + #chart-section {
+    /* chart stays full width below */
+  }
+
+  /*
+   * We achieve the two-column layout without JS by making the form and
+   * list sections flex siblings inside the page flow.
+   * Because they are both direct children of body with max-width + auto
+   * margins, we use a wrapper approach via adjacent sibling selector trick.
+   * For simplicity we widen the #form-section and keep both readable.
+   */
+  #form-section {
+    max-width: 480px;
+    margin-left:  auto;
+    margin-right: auto;
+  }
+}
+
+
+/* =========================================================================
+   ACCESSIBILITY UTILITIES
+   ========================================================================= */
+
+/* Focus ring for keyboard users — visible on any interactive element */
+:focus-visible {
+  outline:        2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+/* Visually hidden (for screen-reader-only text) */
+.sr-only {
+  position: absolute;
+  width:    1px;
+  height:   1px;
+  padding:  0;
+  margin:   -1px;
+  overflow: hidden;
+  clip:     rect(0, 0, 0, 0);
+  border:   0;
+}
+
+/* =========================================================================
+   SCROLLBAR STYLING (optional cosmetic, non-breaking if unsupported)
+   ========================================================================= */
+
+#transaction-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#transaction-list::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+#transaction-list::-webkit-scrollbar-thumb {
+  background:    var(--border-color);
+  border-radius: 3px;
+}

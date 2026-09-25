@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense &amp; Budget Visualizer</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <h1>Expense &amp; Budget Visualizer</h1>
+    <button id="theme-toggle" aria-label="Toggle dark/light mode">🌙 Dark Mode</button>
+  </header>
+
+  <!-- ===== BALANCE DISPLAY ===== -->
+  <section id="balance-section" aria-label="Total balance">
+    <h2>Total Balance</h2>
+    <p id="balance-display">0.00</p>
+  </section>
+
+  <!-- ===== INPUT FORM ===== -->
+  <section id="form-section" aria-label="Add expense form">
+    <h2>Add Expense</h2>
+    <form id="input-form" novalidate>
+
+      <!-- Item Name -->
+      <div class="form-group">
+        <label for="name-input">Item Name</label>
+        <input
+          type="text"
+          id="name-input"
+          name="name"
+          maxlength="100"
+          aria-describedby="name-error"
+          placeholder="e.g. Lunch"
+          autocomplete="off"
+        >
+        <span class="error-msg" id="name-error" role="alert"></span>
+      </div>
+
+      <!-- Amount -->
+      <div class="form-group">
+        <label for="amount-input">Amount</label>
+        <input
+          type="number"
+          id="amount-input"
+          name="amount"
+          step="0.01"
+          min="0.01"
+          max="999999999.99"
+          aria-describedby="amount-error"
+          placeholder="0.00"
+        >
+        <span class="error-msg" id="amount-error" role="alert"></span>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="category-select">Category</label>
+        <select id="category-select" name="category" aria-describedby="category-error">
+          <option value="">-- Select Category --</option>
+          <option value="Food">Food</option>
+          <option value="Transport">Transport</option>
+          <option value="Fun">Fun</option>
+        </select>
+        <span class="error-msg" id="category-error" role="alert"></span>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-primary">Add Transaction</button>
+      <!-- Storage / save error shown inline near submit -->
+      <span class="error-msg" id="storage-error" role="alert"></span>
+
+    </form>
+  </section>
+
+  <!-- ===== CATEGORY PIE CHART ===== -->
+  <section id="chart-section" aria-label="Spending by category chart">
+    <h2>Spending by Category</h2>
+    <div id="chart-container">
+      <canvas id="expense-chart"></canvas>
+      <p id="chart-placeholder" class="placeholder-msg">No spending data available.</p>
+    </div>
+  </section>
+
+  <!-- ===== TRANSACTION LIST ===== -->
+  <section id="list-section" aria-label="Transaction list">
+    <div class="list-header">
+      <h2>Transactions</h2>
+      <!-- Sort control (Optional Challenge 2) -->
+      <select id="sort-control" aria-label="Sort transactions">
+        <option value="">Default Order</option>
+        <option value="amount-asc">Amount ↑</option>
+        <option value="amount-desc">Amount ↓</option>
+        <option value="category-asc">Category A–Z</option>
+      </select>
+    </div>
+    <ul id="transaction-list" role="list">
+      <!-- Populated by TransactionListUI.render() -->
+    </ul>
+  </section>
+
+  <!-- ===== MONTHLY SUMMARY (Optional Challenge 1) ===== -->
+  <section id="summary-section" aria-label="Monthly spending summary">
+    <h2>Monthly Summary</h2>
+    <div id="monthly-summary">
+      <!-- Populated by MonthlySummaryUI.render() -->
+    </div>
+  </section>
+
+  <!-- Chart.js CDN — must come before app.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Application logic -->
+  <script src="js/app.js"></script>
+
+</body>
+</html>
